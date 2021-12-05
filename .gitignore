@@ -34,3 +34,4 @@ lerna-debug.log*
 !.vscode/extensions.json
 resources/ecc-private-key.pem
 resources/ecc-public-key.pem
+src/app.config.ts

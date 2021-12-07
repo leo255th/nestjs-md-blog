@@ -27,6 +27,7 @@ export class UserService {
     }else {
       // 用户名不存在，使用用户提供的信息注册新账号
       let newUser=new UserEntity();
+      newUser.userName=dto.username;
       newUser.passWord=pwdEncrypt(dto.password);
       newUser=await this.userRepository.save(newUser);
       return{

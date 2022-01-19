@@ -1,7 +1,7 @@
 import { Body, Controller, Header, Post, Req } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiHeader, ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
-import { AccessRefreshDto, AccessRefreshResDto, GetAccessDto, GetAccessResDto, GetTicketDto, GetTicketResDto, UserSignInDto, UserSignInResDto, UserSignUpDto, UserSignUpResDto } from './user.dto';
+import { GetAccessDto, GetAccessResDto, GetTicketDto, GetTicketResDto, UserSignInDto, UserSignInResDto, UserSignUpDto, UserSignUpResDto } from './user.dto';
 import { UserService } from './user.service';
 @Controller('user')
 @ApiBearerAuth()
@@ -53,14 +53,4 @@ export class UserController {
     return this.userService.getAccessToken(dto);
   }
 
-
-  @Post('access-token-refresh')
-  @ApiResponse({status:201,description:'token刷新成功',type:AccessRefreshResDto})
-  @ApiResponse({status:401,description:'refreshToken验证失败'})
-  @ApiTags('刷新access_token')
-  async tokenRefresh(
-    @Body()dto:AccessRefreshDto
-  ):Promise<AccessRefreshResDto>{
-    return this.userService.tokenRefresh(dto);
-  }
 }

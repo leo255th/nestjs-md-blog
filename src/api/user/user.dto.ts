@@ -28,16 +28,12 @@ export class UserSignInResDto{
   res:boolean;
   @ApiProperty({type:String,required:false,description:'sessionToken'})
   sessionToken?:string;
-  @ApiProperty({type:String,required:false,description:'freshToken'})
-  refreshToken?:string;
 }
 
 // 申请ticket_token
 export class GetTicketDto{
   @ApiProperty({type:String,required:true,description:'sessionToken'})
   sessionToken:string;
-  @ApiProperty({type:String,required:true,description:'freshToken'})
-  refreshToken:string;
   @ApiProperty({type:String,required:true,description:'要申请ticket的系统的url'})
   url:string;
   @ApiProperty({type:Number,required:true,description:'用户ID'})
@@ -46,8 +42,6 @@ export class GetTicketDto{
 export class GetTicketResDto{
   @ApiProperty({type:String,required:false,description:'ticketToken'})
   ticketToken?:string;
-  @ApiProperty({type:String,required:false,description:'freshToken'})
-  refreshToken?:string;
 }
 
 
@@ -59,25 +53,5 @@ export class GetAccessDto{
 export class GetAccessResDto{
   @ApiProperty({type:String,required:false,description:'accessToken'})
   accessToken?:string;
-  @ApiProperty({type:String,required:false,description:'freshToken'})
-  refreshToken?:string;
 }
 
-
-
-
-// access_token刷新
-export class AccessRefreshDto{
-  @ApiProperty({type:String,required:true,description:'accessToken'})
-  accessToken:string;
-  @ApiProperty({type:String,required:true,description:'freshToken'})
-  refreshToken:string;
-}
-export class AccessRefreshResDto{
-  @ApiProperty({type:Boolean,required:true,description:'结果，登陆成功返回true'})
-  res:boolean;
-  @ApiProperty({type:String,required:false,description:'accessToken'})
-  accessToken?:string;
-  @ApiProperty({type:String,required:false,description:'freshToken'})
-  refreshToken?:string;
-}

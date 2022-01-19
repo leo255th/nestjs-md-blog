@@ -3,8 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from 'src/models/user.entity';
 import { Repository } from 'typeorm';
 import { pwdEncrypt } from 'src/utils/pwdEnc.func';
-import { AccessRefreshDto, AccessRefreshResDto, GetAccessDto, GetAccessResDto, GetTicketDto, GetTicketResDto, UserSignInDto, UserSignInResDto, UserSignUpDto, UserSignUpResDto } from './user.dto';
-import { accessTokenGenerate, accessTokenRefresh, sessionTokenGenerate, ticketTokenGenerate } from 'src/utils/jwt.func';
+import { GetAccessDto, GetAccessResDto, GetTicketDto, GetTicketResDto, UserSignInDto, UserSignInResDto, UserSignUpDto, UserSignUpResDto } from './user.dto';
+import { accessTokenGenerate, sessionTokenGenerate, ticketTokenGenerate } from 'src/utils/jwt.func';
 
 @Injectable()
 export class UserService {
@@ -55,11 +55,10 @@ export class UserService {
         throw new HttpException('用户名或密码错误',HttpStatus.BAD_REQUEST)
       }else {
         // 登录成功，生成SSO网站的session_token
-        const{sessionToken,refreshToken}=await sessionTokenGenerate({userId:user.id})
+        const{sessionToken}=await sessionTokenGenerate({userId:user.id})
         return {
           res:true,
-          sessionToken,
-          refreshToken
+          sessionToken
         }
       }
     }
@@ -67,7 +66,7 @@ export class UserService {
 
 
   // 用户申请ticket
-  async  getTicket(
+  async getTicket(
     dto:GetTicketDto
   ):Promise<GetTicketResDto>{
     return ticketTokenGenerate(dto)
@@ -80,10 +79,4 @@ export class UserService {
     return accessTokenGenerate(dto)
   }
 
-  // 用户token刷新
-  async tokenRefresh(
-    dto:AccessRefreshDto
-  ):Promise<AccessRefreshResDto>{
-    return accessTokenRefresh(dto);
-  }
 }

@@ -58,6 +58,7 @@ export class UserService {
         const{sessionToken}=await sessionTokenGenerate({userId:user.id})
         return {
           res:true,
+          userId:user.id,
           sessionToken
         }
       }

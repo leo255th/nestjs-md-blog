@@ -10,16 +10,16 @@ export class UserController {
     private userService: UserService
   ) { }
 
-  @Post('sign-up')
-  @ApiResponse({ status: 201, description: '注册成功', type: UserSignUpResDto })
-  @ApiResponse({ status: 400, description: '注册失败' })
-  @ApiTags('用户注册')
-  async userSignUp(
-    @Body() dto: UserSignUpDto,
-    @Req() req: Request
-  ): Promise<UserSignUpResDto> {
-    return this.userService.signUp(dto)
-  }
+  // @Post('sign-up')
+  // @ApiResponse({ status: 201, description: '注册成功', type: UserSignUpResDto })
+  // @ApiResponse({ status: 400, description: '注册失败' })
+  // @ApiTags('用户注册')
+  // async userSignUp(
+  //   @Body() dto: UserSignUpDto,
+  //   @Req() req: Request
+  // ): Promise<UserSignUpResDto> {
+  //   return this.userService.signUp(dto)
+  // }
 
   @Post('sign-in')
   @ApiResponse({ status: 201, description: '登陆成功', type: UserSignInResDto })

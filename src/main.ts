@@ -13,7 +13,7 @@ async function bootstrap() {
       description: '添加access_token认证',
       type: 'http',
       in: 'header',
-      scheme: 'bearer',
+      // scheme: 'bearer',
       name: 'Authorization'
     })
     .build();

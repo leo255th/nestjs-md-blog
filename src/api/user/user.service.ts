@@ -3,8 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from 'src/models/user.entity';
 import { Repository } from 'typeorm';
 import { pwdEncrypt } from 'src/utils/pwdEnc.func';
-import { GetAccessDto, GetAccessResDto, GetTicketDto, GetTicketResDto, UserSignInDto, UserSignInResDto, UserSignUpDto, UserSignUpResDto } from './user.dto';
-import { accessTokenGenerate, sessionTokenGenerate, ticketTokenGenerate } from 'src/utils/jwt.func';
+import { GetAccessDto, GetAccessResDto, GetTicketDto, GetTicketResDto, GetUserInfoDto, UserSignInDto, UserSignInResDto, UserSignUpDto, UserSignUpResDto } from './user.dto';
+import { accessTokenGenerate, accessTokenVerify, sessionTokenGenerate, ticketTokenGenerate } from 'src/utils/jwt.func';
 
 @Injectable()
 export class UserService {
@@ -80,4 +80,24 @@ export class UserService {
     return accessTokenGenerate(dto)
   }
 
+  // 用户获取基本信息
+  async getUserInfo(
+    access_token:string
+  ):Promise<GetUserInfoDto>{
+    const {res,userId}=await accessTokenVerify(access_token);
+    if(res){
+      // 验证token成功
+      const user=await this.userRepository.findOne(userId);
+      if(user){
+        return {
+          userId:user.id,
+          userName:user.userName
+        }
+      }else{
+        throw new HttpException('会话已过期,请重新登录', HttpStatus.UNAUTHORIZED)
+      }
+    }else{
+      throw new HttpException('会话已过期,请重新登录', HttpStatus.UNAUTHORIZED)
+    }
+  }
 }

@@ -57,3 +57,11 @@ export class GetAccessResDto {
   accessToken?: string;
 }
 
+// 获取用户信息
+export class GetUserInfoDto{
+  @ApiProperty({type:String,required:true,description:'用户名'})
+  userName:string;
+  @ApiProperty({type:Number,required:true,description:'用户ID'})
+  userId:number;
+}
+

@@ -1,7 +1,8 @@
-import { Body, Controller, Header, Post, Req } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiHeader, ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Get, Headers, Post, Query, Req } from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiHeader, ApiQuery, ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
-import { GetAccessDto, GetAccessResDto, GetTicketDto, GetTicketResDto, UserSignInDto, UserSignInResDto, UserSignUpDto, UserSignUpResDto } from './user.dto';
+import { Accesses } from 'src/decorators/accesses.decorator';
+import { GetAccessDto, GetAccessResDto, GetTicketDto, GetTicketResDto, GetUserInfoDto, UserSignInDto, UserSignInResDto, UserSignUpDto, UserSignUpResDto } from './user.dto';
 import { UserService } from './user.service';
 @Controller('user')
 @ApiBearerAuth()
@@ -51,6 +52,17 @@ export class UserController {
     @Body()dto:GetAccessDto
   ):Promise<GetAccessResDto>{
     return this.userService.getAccessToken(dto);
+  }
+
+  @Get('get-user-info')
+  @ApiResponse({status:200,description:'获取成功',type:GetUserInfoDto})
+  @ApiTags('获取用户基本信息')
+  @Accesses('USER')
+  async getUserInfo(
+    @Headers('Authorization') access_token:string,
+  ):Promise<GetUserInfoDto>{
+    console.log('请求附带的token是：',access_token)
+    return this.userService.getUserInfo(access_token)
   }
 
 }

@@ -186,7 +186,7 @@ export async function accessTokenGenerate(payload: {
 
 export async function accessTokenVerify(
   accessToken: string
-): Promise<{ res: boolean }> {
+): Promise<{ res: boolean ,userId:number}> {
 
   // 验证redis
   const session_token = await redis.hget(redis_access_key, accessToken);
@@ -195,11 +195,13 @@ export async function accessTokenVerify(
     throw new HttpException('授权无效,请重新登录', HttpStatus.UNAUTHORIZED)
   }
 
+  let decode;
   // 验证accessToken本身
   const verify = await new Promise<{ res: boolean }>((resolve, reject) => {
     jwt.verify(accessToken, PUBLIC_KEY, { algorithms: ['ES256'] }, async (err, dec) => {
       if (!err) {
         // 验证通过
+        decode = dec;
         resolve({
           res: true,
         })
@@ -218,11 +220,14 @@ export async function accessTokenVerify(
   });
   if (verify.res == true) {
     // 验证token本身通过
+    const { userId, url } = JSON.parse(decode.data);
     return {
       res: true,
+      userId
     }
   } else {
     throw new HttpException('授权无效,请重新登录', HttpStatus.UNAUTHORIZED)
   }
 }
+
 

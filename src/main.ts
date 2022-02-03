@@ -14,6 +14,7 @@ async function bootstrap() {
       type: 'http',
       in: 'header',
       // scheme: 'bearer',
+      scheme:'',
       name: 'Authorization'
     })
     .build();

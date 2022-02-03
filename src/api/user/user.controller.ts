@@ -62,9 +62,9 @@ export class UserController {
     @Headers('Authorization') access_token:string,
   ):Promise<GetUserInfoDto>{
     console.log('请求附带的token是：',access_token)
-    const tmp=access_token.split('bearer ');
+    const tmp=access_token.split('Bearer ');
     let token=tmp.length==1?tmp[0]:tmp[1];
-    return this.userService.getUserInfo(access_token)
+    return this.userService.getUserInfo(token)
   }
 
 }

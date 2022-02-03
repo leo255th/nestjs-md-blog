@@ -25,5 +25,6 @@ export class UserGuard implements CanActivate {
     }
     const request = context.switchToHttp().getRequest();
     console.log('请求头是：',request.headers)
+    return true;
   }
 }

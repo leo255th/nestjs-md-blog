@@ -166,7 +166,7 @@ export async function accessTokenGenerate(payload: {
       await redis.hmset(
         redis_access_key,
         {
-          [accessToken]: accessToken
+          [accessToken]: session_token
         }
       )
       await redis.hdel(

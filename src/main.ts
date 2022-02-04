@@ -12,7 +12,6 @@ const httpsOptions = {
 async function bootstrap() {
   const app = await NestFactory.create(AppModule,{
     httpsOptions,
-    cors:true
   });
   const config = new DocumentBuilder()
     .setTitle('leoyi-blog')
@@ -29,6 +28,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
   // 设置全局守卫UserGuard
+  app.enableCors({})
   app.useGlobalGuards(new UserGuard(new Reflector()))
   await app.listen(3000);
 }

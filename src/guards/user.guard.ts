@@ -1,5 +1,10 @@
 import { Injectable, CanActivate, ExecutionContext, HttpException, HttpStatus } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import * as Redis from "ioredis";
+import { APP_CONFIG } from 'src/app.config';
+const redis = new Redis(APP_CONFIG.REDIS);
+const redis_session_key = 'user_session_token_hash'
+const redis_access_key = 'user_access_token_hash'
 // 这个Guard用来对调用接口的用户进行身份验证
 @Injectable()
 export class UserGuard implements CanActivate {
@@ -24,7 +29,16 @@ export class UserGuard implements CanActivate {
       return true;
     }
     const request = context.switchToHttp().getRequest();
-    console.log('请求头是：',request.headers)
+    const accessToken = request.headers.Authorization;
+    if (!accessToken) {
+      throw new HttpException('授权无效，请重新登录', HttpStatus.UNAUTHORIZED)
+    }
+    // 如果redis里没有对应的accessToken,则抛出认证错误
+    const tokenInRedis=await redis.hget(redis_access_key,accessToken);
+    if(!tokenInRedis||tokenInRedis==''){
+      throw new HttpException('授权无效，请重新登录', HttpStatus.UNAUTHORIZED)
+    }
+    // 通过验证,放行
     return true;
   }
 }

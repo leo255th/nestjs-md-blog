@@ -30,8 +30,16 @@ export class UserController {
     @Body() dto: UserSignInDto,
     @Req() req: Request
   ): Promise<UserSignInResDto> {
-
     return this.userService.signIn(dto)
+  }
+
+  @Post('log-out')
+  @ApiResponse({ status: 201, description: '登出成功', type: Boolean })
+  @ApiTags('用户登出')
+  async userLogOut(
+    @Headers('Authorization') access_token:string,
+  ): Promise<boolean> {
+    return this.userService.LogOut(access_token);
   }
 
   @Post('get-ticket-token')
@@ -61,7 +69,8 @@ export class UserController {
   async getUserInfo(
     @Headers('Authorization') access_token:string,
   ):Promise<GetUserInfoDto>{
-    console.log('请求附带的token是：',access_token)
+    // 要在SWAGGER文档里测试API,则需要把token前面的Bearer标识头移除。
+    // 目前博客前端是直接将token放在Authorization字段里的。
     const tmp=access_token.split('Bearer ');
     let token=tmp.length==1?tmp[0]:tmp[1];
     return this.userService.getUserInfo(token)

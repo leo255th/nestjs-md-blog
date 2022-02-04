@@ -5,7 +5,11 @@ import { Repository } from 'typeorm';
 import { pwdEncrypt } from 'src/utils/pwdEnc.func';
 import { GetAccessDto, GetAccessResDto, GetTicketDto, GetTicketResDto, GetUserInfoDto, UserSignInDto, UserSignInResDto, UserSignUpDto, UserSignUpResDto } from './user.dto';
 import { accessTokenGenerate, accessTokenVerify, sessionTokenGenerate, ticketTokenGenerate } from 'src/utils/jwt.func';
-
+import * as Redis from "ioredis";
+import { APP_CONFIG } from 'src/app.config';
+const redis = new Redis(APP_CONFIG.REDIS);
+const redis_session_key = 'user_session_token_hash'
+const redis_access_key = 'user_access_token_hash'
 @Injectable()
 export class UserService {
   constructor(
@@ -63,6 +67,22 @@ export class UserService {
         }
       }
     }
+  }
+  
+  // 用户登出
+  async LogOut(accessToken:string):Promise<boolean>{
+    // 通过accessToken找sessionToken
+    const sessionToken=await redis.hget(redis_access_key,accessToken);
+    // 通过sessionToken找到所有的accessToken
+    const accessTokenListStr=await redis.hget(redis_session_key,sessionToken);
+    const accessTokenList:string[]=JSON.parse(accessTokenListStr);
+    for(let token of  accessTokenList){
+      // 删除accessToken表里的对应信息
+      await redis.hdel(redis_access_key,token);
+    }
+    // 删除sessionToken表里的对应信息
+    await redis.hdel(redis_session_key,sessionToken);
+    return true;
   }
 
 

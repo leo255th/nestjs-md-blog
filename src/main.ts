@@ -30,6 +30,6 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
   // 设置全局守卫UserGuard
   app.useGlobalGuards(new UserGuard(new Reflector()))
-  await app.listen(443);
+  await app.listen(3000);
 }
 bootstrap();

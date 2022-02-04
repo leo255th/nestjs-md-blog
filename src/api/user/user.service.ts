@@ -75,7 +75,9 @@ export class UserService {
     const sessionToken=await redis.hget(redis_access_key,accessToken);
     // 通过sessionToken找到所有的accessToken
     const accessTokenListStr=await redis.hget(redis_session_key,sessionToken);
+    console.log('accessTokenListStr:',accessTokenListStr);
     const accessTokenList:string[]=JSON.parse(accessTokenListStr);
+
     for(let token of  accessTokenList){
       // 删除accessToken表里的对应信息
       await redis.hdel(redis_access_key,token);

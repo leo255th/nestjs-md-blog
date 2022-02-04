@@ -29,7 +29,7 @@ export class UserGuard implements CanActivate {
       return true;
     }
     const request = context.switchToHttp().getRequest();
-    const accessToken = request.headers.Authorization;
+    const accessToken = request.headers.authorization;
     if (!accessToken) {
       throw new HttpException('授权无效，请重新登录', HttpStatus.UNAUTHORIZED)
     }

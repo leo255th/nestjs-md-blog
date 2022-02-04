@@ -72,8 +72,10 @@ export class UserService {
   // 用户登出
   async LogOut(accessToken:string):Promise<boolean>{
     // 通过accessToken找sessionToken
+    console.log('accessToken:',accessToken);
     const sessionToken=await redis.hget(redis_access_key,accessToken);
     // 通过sessionToken找到所有的accessToken
+    console.log('sessionToken:',accessToken);
     const accessTokenListStr=await redis.hget(redis_session_key,sessionToken);
     console.log('accessTokenListStr:',accessTokenListStr);
     const accessTokenList:string[]=JSON.parse(accessTokenListStr);

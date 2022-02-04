@@ -3,9 +3,10 @@ import { SwaggerModule, DocumentBuilder, OmitType } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { UserGuard } from './guards/user.guard';
 import * as fs from 'fs';
+console.log(__dirname);
 const httpsOptions = {
-  key: fs.readFileSync('../cert/leoyiblog.cn.key'),
-  cert: fs.readFileSync('../cert/leoyiblog.cn_bundle.crt'),
+  key: fs.readFileSync(__dirname+'../cert/leoyiblog.cn.key'),
+  cert: fs.readFileSync(__dirname+'../cert/leoyiblog.cn_bundle.crt'),
 };
 async function bootstrap() {
   const app = await NestFactory.create(AppModule,{

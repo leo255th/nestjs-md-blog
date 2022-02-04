@@ -4,8 +4,8 @@ import { AppModule } from './app.module';
 import { UserGuard } from './guards/user.guard';
 import * as fs from 'fs';
 const httpsOptions = {
-  key: fs.readFileSync('/cert/leoyiblog.cn.key'),
-  cert: fs.readFileSync('/cert/leoyiblog.cn_bundle.crt'),
+  key: fs.readFileSync('../cert/leoyiblog.cn.key'),
+  cert: fs.readFileSync('../cert/leoyiblog.cn_bundle.crt'),
 };
 async function bootstrap() {
   const app = await NestFactory.create(AppModule,{

@@ -2,16 +2,9 @@ import { NestFactory, Reflector } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder, OmitType } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { UserGuard } from './guards/user.guard';
-import * as fs from 'fs';
-import { join } from 'path';
-console.log(__dirname);
-const httpsOptions = {
-  key: fs.readFileSync( join(__dirname,'..','cert/leoyiblog.cn.key')),
-  cert: fs.readFileSync(join(__dirname,'..','cert/leoyiblog.cn_bundle.crt')),
-};
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule,{
-    httpsOptions,
   });
   const config = new DocumentBuilder()
     .setTitle('leoyi-blog')
@@ -29,11 +22,11 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
   // 设置全局守卫UserGuard
   app.enableCors({
-    origin:[
-      "https://leoyiblog.cn",
-      "https://www.leoyiblog.cn"
-    ],
-    credentials:true
+    // origin:[
+    //   "https://leoyiblog.cn",
+    //   "https://www.leoyiblog.cn"
+    // ],
+    // credentials:true
   })
   app.useGlobalGuards(new UserGuard(new Reflector()))
   await app.listen(3000);

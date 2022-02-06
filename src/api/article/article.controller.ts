@@ -1,4 +1,35 @@
-import { Controller } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ArticleCreateDto, FieldCreateDto, FieldNameItem } from './article.dto';
+import { ArticleService } from './article.service';
 
 @Controller('article')
-export class ArticleController {}
+@ApiBearerAuth()
+export class ArticleController {
+  constructor(
+    private readonly articleService:ArticleService
+  ){}
+  @Post('create-article')
+  @ApiResponse({ status: 201, description: '文章创建成功,返回文章的ID', type: Number })
+  @ApiTags('文章-创建')
+  async articleCreate(
+    @Body() dto: ArticleCreateDto,
+  ): Promise<number> {
+    return this.articleService.articleCreate(dto);
+  }
+  @Post('create-field')
+  @ApiResponse({ status: 201, description: '分区创建成功,返回分区的ID', type: Number })
+  @ApiTags('分区-创建')
+  async fieldCreate(
+    @Body() dto: FieldCreateDto,
+  ): Promise<number> {
+    return this.articleService.fieldCreate(dto);
+  }
+  @Get('get-field-list')
+  @ApiResponse({status:200,description:'分区名称列表',type:[FieldNameItem]})
+  @ApiTags('分区-获取-名称列表')
+  async getFieldNameList(
+  ):Promise<FieldNameItem[]>{
+    return this.articleService.getFieldNameList()
+  }
+}

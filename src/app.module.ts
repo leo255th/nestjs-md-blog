@@ -9,6 +9,7 @@ import { APP_CONFIG } from './app.config';
 @Module({
   imports: [
     UserModule,
+    ArticleModule,
     TypeOrmModule.forRoot(
       APP_CONFIG.MARIADB
     )

@@ -70,14 +70,17 @@ export class ArticleService {
   // 获取分区名称列表
   async getFieldNameList():Promise<FieldNameItem[]>{
     const res=await this.fieldRepository.find({isDeleted:false});
-    const field_name_list=res.map(field_entity=>{
+    const field_name_list= await Promise.all(res.map(async field_entity=>{
       return {
         id:field_entity.id,
         field:field_entity.field,
         order:field_entity.order,
-        isVisiable:field_entity.isVisiable
+        isVisiable:field_entity.isVisiable,
+        count:await this.articleRepository.count({
+          fieldId:field_entity.id
+        })
       }
-    });
+    }));
     field_name_list.sort((a,b)=>a.order-b.order);
     return field_name_list;
   }

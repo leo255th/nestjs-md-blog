@@ -49,4 +49,6 @@ export class FieldNameItem{
   isVisiable: boolean;
   @ApiProperty({type:Number,required:true,description:'顺序号,顺序号越小的分区排序在前'})
   order: number;
+  @ApiProperty({type:Number,required:true,description:'文章数'})
+  count: number;
 }

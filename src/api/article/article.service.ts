@@ -5,7 +5,7 @@ import { FieldEntity } from 'src/models/field.entity';
 import { TagEntity } from 'src/models/tag.entity';
 import { UserEntity } from 'src/models/user.entity';
 import { Repository } from 'typeorm';
-import { ArticleCreateDto, FieldCreateDto, FieldNameItem } from './article.dto';
+import { ArticleCreateDto, FieldCreateDto, FieldEditDto, FieldNameItem } from './article.dto';
 
 @Injectable()
 export class ArticleService {
@@ -50,8 +50,22 @@ export class ArticleService {
   ):Promise<number>{
     let field=new FieldEntity();
     field.field=dto.field;
+    field.order=dto.order;
+    field.isVisiable=dto.isVisiable;
     await this.fieldRepository.save(field);
     return field.id;
+  }
+  // 修改分区
+  async fieldEdit(
+    dto:FieldEditDto
+  ):Promise<number>{
+    let field=await this.fieldRepository.findOne(dto.id);
+    field={
+      ...field,
+      ...dto
+    }
+    const res=await this.fieldRepository.save(field);
+    return res.id;
   }
   // 获取分区名称列表
   async getFieldNameList():Promise<FieldNameItem[]>{
@@ -59,7 +73,9 @@ export class ArticleService {
     const field_name_list=res.map(field_entity=>{
       return {
         id:field_entity.id,
-        field:field_entity.field
+        field:field_entity.field,
+        order:field_entity.order,
+        isVisiable:field_entity.isVisiable
       }
     });
     return field_name_list;

@@ -22,6 +22,22 @@ export class ArticleCreateDto {
 export class  FieldCreateDto{
   @ApiProperty({type:String,required:true,description:'分区'})
   field:string;
+  @ApiProperty({type:Boolean,required:true,description:'是否在首页可见'})
+  isVisiable?: boolean;
+  @ApiProperty({type:Number,required:true,description:'顺序号,顺序号越小的分区排序在前'})
+  order?: number;
+}
+export class  FieldEditDto{
+  @ApiProperty({type:Number,required:true,description:'分区id'})
+  id:number
+  @ApiProperty({type:String,required:true,description:'分区'})
+  field:string;
+  @ApiProperty({type:Boolean,required:true,description:'是否在首页可见'})
+  isVisiable?: boolean;
+  @ApiProperty({type:Number,required:true,description:'顺序号,顺序号越小的分区排序在前'})
+  order?: number;
+  @ApiProperty({type:Boolean,default:false,description:'是否删除'})
+  isDeleted?: boolean;
 }
 // 获取分区名称列表dto
 export class FieldNameItem{
@@ -29,4 +45,8 @@ export class FieldNameItem{
   id:number;
   @ApiProperty({type:String,required:true,description:'分区名称'})
   field:string;
+  @ApiProperty({type:Boolean,required:true,description:'是否在首页可见'})
+  isVisiable: boolean;
+  @ApiProperty({type:Number,required:true,description:'顺序号,顺序号越小的分区排序在前'})
+  order: number;
 }

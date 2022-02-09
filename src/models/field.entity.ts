@@ -8,7 +8,13 @@ export class FieldEntity {
 
   @Column({ comment: "领域", nullable: false })
   field: string;
-  
+
+  @Column({ comment: '顺序号,顺序号越小的分区排序在前', default: 0 })
+  order?: number;
+
+  @Column({ comment: '是否在首页可见', default: 0 })
+  isVisiable?: boolean;
+
   @CreateDateColumn({ comment: '创建时间' })
   createdAt?: Date;
 

@@ -78,6 +78,7 @@ export class ArticleService {
         isVisiable:field_entity.isVisiable
       }
     });
+    field_name_list.sort((a,b)=>a.order-b.order);
     return field_name_list;
   }
   

@@ -91,18 +91,18 @@ export class ArticleService {
   ): Promise<ArticleList> {
     let qb = this.articleRepository.createQueryBuilder('a');
     let res;
-    qb = qb.where(dto.fieldId ? 'a.fieldId=:fieldId' : '1=1', { fieldId: dto.fieldId });
     if (dto.tags) {
-      let tags=[];
-      if(typeof dto.tags =='string'){
-        tags=[dto.tags];
-      }else {
-        tags=[...dto.tags];
+      let tags = [];
+      if (typeof dto.tags == 'string') {
+        tags = [dto.tags];
+      } else {
+        tags = [...dto.tags];
       }
       qb = qb.leftJoinAndSelect(TagEntity, 't', 't.articleId=a.id')
         .where(`t.tag in ('${tags.join("','")}')`)
     }
     res = await qb
+      .where(dto.fieldId ? 'a.fieldId=:fieldId' : '1=1', { fieldId: dto.fieldId })
       .andWhere('a.userId=:userId', { userId: dto.userId })
       .andWhere('a.isDeleted <> 1')
       .orderBy({ 'a.updatedAt': 'DESC' })

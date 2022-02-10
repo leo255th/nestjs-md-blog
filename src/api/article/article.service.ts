@@ -5,7 +5,7 @@ import { FieldEntity } from 'src/models/field.entity';
 import { TagEntity } from 'src/models/tag.entity';
 import { UserEntity } from 'src/models/user.entity';
 import { Repository } from 'typeorm';
-import { ArticleCreateDto, ArticleList, FieldCreateDto, FieldEditDto, FieldNameItem } from './article.dto';
+import { ArticleCreateDto, ArticleList, ArticleListSearchDto, FieldCreateDto, FieldEditDto, FieldNameItem } from './article.dto';
 
 @Injectable()
 export class ArticleService {
@@ -86,8 +86,27 @@ export class ArticleService {
   }
 
   // 获取文章列表
-  async getArticleList():Promise<ArticleList>{
-    return;
+  async getArticleList(
+    dto:ArticleListSearchDto
+  ):Promise<ArticleList>{
+    let qb=this.articleRepository.createQueryBuilder('a');
+    let res;
+    qb=qb.where(dto.fieldId?'a.fieldId=:fieldId':'1=1',{fieldId:dto.fieldId})
+    if(dto.tags){
+      qb=qb.leftJoinAndSelect(TagEntity,'t','t.articleId=a.id')
+      .where(`t.tags in (${dto.tags.toString()})`)
+    }
+    res=await qb
+    .andWhere('a.userId=:userId',{userId:dto.userId})
+    .andWhere('a.isDeleted <> 1')
+    .orderBy({'updatedAt':'DESC'})
+    .skip(dto.offset)
+    .take(dto.num)
+    .getManyAndCount();
+    return {
+      list:res[0],
+      total:res[1]
+    }
   }
   
 }

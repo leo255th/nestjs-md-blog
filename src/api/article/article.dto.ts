@@ -56,8 +56,8 @@ export class FieldNameItem{
 export class ArticleListSearchDto{
   @ApiProperty({type:Number,required:true,description:'作者ID'})
   userId: number;
-  @ApiProperty({type:String,required:false,description:'文章分区'})
-  field?: string;
+  @ApiProperty({type:Number,required:false,description:'文章分区ID'})
+  fieldId?: number;
   @ApiProperty({type:[String],required:false,description:'文章标签'})
   tags?:string[];
   @ApiProperty({type:Number,default:0,description:'偏移量'})
@@ -88,5 +88,5 @@ export class ArticleList{
   @ApiProperty({type:[ArticleListItem],required:true,description:'文章列表'})
   list:ArticleListItem[];
   @ApiProperty({type:Number,required:true,description:'文章总数'})
-  count:number;
+  total:number;
 }

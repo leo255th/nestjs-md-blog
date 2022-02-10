@@ -94,7 +94,7 @@ export class ArticleService {
     qb = qb.where(dto.fieldId ? 'a.fieldId=:fieldId' : '1=1', { fieldId: dto.fieldId })
     if (dto.tags) {
       qb = qb.leftJoinAndSelect(TagEntity, 't', 't.articleId=a.id')
-        .where(`t.tags in (${dto.tags.toString()})`)
+        .where(`t.tag in (${dto.tags.toString()})`)
     }
     res = await qb
       .andWhere('a.userId=:userId', { userId: dto.userId })

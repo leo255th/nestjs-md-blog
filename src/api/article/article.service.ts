@@ -24,89 +24,90 @@ export class ArticleService {
   async articleCreate(
     dto: ArticleCreateDto
   ): Promise<number> {
-      // 保存文章
-      let article = new ArticleEntity();
-      article.title = dto.title;
-      article.description = dto.description;
-      article.content = dto.content;
-      article.fieldId = dto.fieldId;
-      article.userId = dto.userId;
-      article = await this.articleRepository.save(article);
-      if(!article){
-        throw new HttpException('文章创建失败',HttpStatus.INTERNAL_SERVER_ERROR)
-      }
-      // 保存标签
-      for(let item of dto.tags){
-        let tag=new TagEntity();
-        tag.articleId=article.id;
-        tag.tag=item;
-        await this.tagRepository.save(tag);
-      }
+    // 保存文章
+    let article = new ArticleEntity();
+    article.title = dto.title;
+    article.description = dto.description;
+    article.content = dto.content;
+    article.fieldId = dto.fieldId;
+    article.userId = dto.userId;
+    article = await this.articleRepository.save(article);
+    if (!article) {
+      throw new HttpException('文章创建失败', HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+    // 保存标签
+    for (let item of dto.tags) {
+      let tag = new TagEntity();
+      tag.articleId = article.id;
+      tag.tag = item;
+      await this.tagRepository.save(tag);
+    }
     return article.id;
   }
   // 新增分区
   async fieldCreate(
-    dto:FieldCreateDto
-  ):Promise<number>{
-    let field=new FieldEntity();
-    field.field=dto.field;
-    field.order=dto.order;
-    field.isVisiable=dto.isVisiable;
+    dto: FieldCreateDto
+  ): Promise<number> {
+    let field = new FieldEntity();
+    field.field = dto.field;
+    field.order = dto.order;
+    field.isVisiable = dto.isVisiable;
     await this.fieldRepository.save(field);
     return field.id;
   }
   // 修改分区
   async fieldEdit(
-    dto:FieldEditDto
-  ):Promise<number>{
-    let field=await this.fieldRepository.findOne(dto.id);
-    field={
+    dto: FieldEditDto
+  ): Promise<number> {
+    let field = await this.fieldRepository.findOne(dto.id);
+    field = {
       ...field,
       ...dto
     }
-    const res=await this.fieldRepository.save(field);
+    const res = await this.fieldRepository.save(field);
     return res.id;
   }
   // 获取分区名称列表
-  async getFieldNameList():Promise<FieldNameItem[]>{
-    const res=await this.fieldRepository.find({isDeleted:false});
-    const field_name_list= await Promise.all(res.map(async field_entity=>{
+  async getFieldNameList(): Promise<FieldNameItem[]> {
+    const res = await this.fieldRepository.find({ isDeleted: false });
+    const field_name_list = await Promise.all(res.map(async field_entity => {
       return {
-        id:field_entity.id,
-        field:field_entity.field,
-        order:field_entity.order,
-        isVisiable:field_entity.isVisiable,
-        count:await this.articleRepository.count({
-          fieldId:field_entity.id
+        id: field_entity.id,
+        field: field_entity.field,
+        order: field_entity.order,
+        isVisiable: field_entity.isVisiable,
+        count: await this.articleRepository.count({
+          fieldId: field_entity.id
         })
       }
     }));
-    field_name_list.sort((a,b)=>a.order-b.order);
+    field_name_list.sort((a, b) => a.order - b.order);
     return field_name_list;
   }
 
   // 获取文章列表
   async getArticleList(
-    dto:ArticleListSearchDto
-  ):Promise<ArticleList>{
-    let qb=this.articleRepository.createQueryBuilder('a');
+    dto: ArticleListSearchDto
+  ): Promise<ArticleList> {
+    let qb = this.articleRepository.createQueryBuilder('a');
     let res;
-    qb=qb.where(dto.fieldId?'a.fieldId=:fieldId':'1=1',{fieldId:dto.fieldId})
-    if(dto.tags){
-      qb=qb.leftJoinAndSelect(TagEntity,'t','t.articleId=a.id')
-      .where(`t.tags in (${dto.tags.toString()})`)
+    qb = qb.where(dto.fieldId ? 'a.fieldId=:fieldId' : '1=1', { fieldId: dto.fieldId })
+    if (dto.tags) {
+      qb = qb.leftJoinAndSelect(TagEntity, 't', 't.articleId=a.id')
+        .where(`t.tags in (${dto.tags.toString()})`)
     }
-    res=await qb
-    .andWhere('a.userId=:userId',{userId:dto.userId})
-    .andWhere('a.isDeleted <> 1')
-    .orderBy({'updatedAt':'DESC'})
-    .skip(dto.offset)
-    .take(dto.num)
-    .getManyAndCount();
+    res = await qb
+      .andWhere('a.userId=:userId', { userId: dto.userId })
+      .andWhere('a.isDeleted <> 1')
+      .orderBy({ 'updatedAt': 'DESC' })
+      .skip(dto.offset)
+      .take(dto.num)
+      .getManyAndCount();
+    console.log(res);
     return {
-      list:res[0],
-      total:res[1]
+      list: res[0],
+      total: res[1]
     }
   }
-  
+
 }

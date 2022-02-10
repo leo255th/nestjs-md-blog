@@ -53,6 +53,6 @@ export class ArticleController {
     @Req() req: Request
   ):Promise<ArticleList>{
     console.log(req.query)
-    return;
+    return this.articleService.getArticleList(req.query as any);
   }
 }

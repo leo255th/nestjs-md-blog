@@ -89,21 +89,21 @@ export class ArticleService {
   async getArticleList(
     dto: ArticleListSearchDto
   ): Promise<ArticleList> {
+    let tags = [];
     let qb = this.articleRepository.createQueryBuilder('a');
     let res;
     if (dto.tags) {
-      let tags = [];
       if (typeof dto.tags == 'string') {
         tags = [dto.tags];
       } else {
         tags = [...dto.tags];
       }
       qb = qb.leftJoinAndSelect(TagEntity, 't', 't.articleId=a.id')
-        .where(`t.tag in ('${tags.join("','")}')`)
     }
     res = await qb
       .where(dto.fieldId ? 'a.fieldId=:fieldId' : '1=1', { fieldId: dto.fieldId })
       .andWhere('a.userId=:userId', { userId: dto.userId })
+      .andWhere(dto.tags?`t.tag in ('${tags.join("','")}')`:'1=1')
       .andWhere('a.isDeleted <> 1')
       .orderBy({ 'a.updatedAt': 'DESC' })
       .skip(dto.offset)

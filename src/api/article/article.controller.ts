@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Req } from '@nestjs/common';
 import { ApiBearerAuth, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ArticleCreateDto, ArticleList, ArticleListSearchDto, FieldCreateDto, FieldEditDto, FieldNameItem } from './article.dto';
 import { ArticleService } from './article.service';
@@ -49,9 +49,10 @@ export class ArticleController {
     description:'文章列表搜索选项'
   })
   async getArticleList(
-    @Query('searchDto') searchDto: ArticleListSearchDto,
+    @Req() req: Request
   ):Promise<ArticleList>{
-    console.log(searchDto);
+    console.log(req)
+    console.log(req['query']);
     return;
   }
 }

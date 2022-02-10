@@ -49,7 +49,7 @@ export class ArticleController {
     description:'文章列表搜索选项'
   })
   async getArticleList(
-    @Query('searchDto') searchDto: string,
+    @Query('searchDto') searchDto: ArticleListSearchDto,
   ):Promise<ArticleList>{
     console.log(searchDto);
     return;

@@ -89,6 +89,7 @@ export class ArticleService {
       delete dto.tags;
     }
     let article = await this.articleRepository.findOne(dto.id);
+    delete dto.id;
     article = {
       ...article,
       ...dto

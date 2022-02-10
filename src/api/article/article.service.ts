@@ -105,7 +105,7 @@ export class ArticleService {
     res = await qb
       .andWhere('a.userId=:userId', { userId: dto.userId })
       .andWhere('a.isDeleted <> 1')
-      .orderBy({ 'updatedAt': 'DESC' })
+      .orderBy({ 'a.updatedAt': 'DESC' })
       .skip(dto.offset)
       .take(dto.num)
       .getManyAndCount();

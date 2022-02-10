@@ -2,6 +2,7 @@ import { Body, Controller, Get, Post, Query, Req } from '@nestjs/common';
 import { ApiBearerAuth, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ArticleCreateDto, ArticleList, ArticleListSearchDto, FieldCreateDto, FieldEditDto, FieldNameItem } from './article.dto';
 import { ArticleService } from './article.service';
+import { Request } from 'express';
 
 @Controller('article')
 @ApiBearerAuth()
@@ -51,8 +52,7 @@ export class ArticleController {
   async getArticleList(
     @Req() req: Request
   ):Promise<ArticleList>{
-    console.log(req)
-    console.log(req['query']);
+    console.log(req.query)
     return;
   }
 }

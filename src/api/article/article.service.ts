@@ -5,7 +5,7 @@ import { FieldEntity } from 'src/models/field.entity';
 import { TagEntity } from 'src/models/tag.entity';
 import { UserEntity } from 'src/models/user.entity';
 import { Repository } from 'typeorm';
-import { ArticleCreateDto, ArticleList, ArticleListSearchDto, FieldCreateDto, FieldEditDto, FieldNameItem } from './article.dto';
+import { ArticleCreateDto, ArticleList, ArticleListItem, ArticleListSearchDto, FieldCreateDto, FieldEditDto, FieldNameItem } from './article.dto';
 
 @Injectable()
 export class ArticleService {
@@ -103,13 +103,23 @@ export class ArticleService {
     res = await qb
       .where(dto.fieldId ? 'a.fieldId=:fieldId' : '1=1', { fieldId: dto.fieldId })
       .andWhere('a.userId=:userId', { userId: dto.userId })
-      .andWhere(dto.tags?`t.tag in ('${tags.join("','")}')`:'1=1')
+      .andWhere(dto.tags ? `t.tag in ('${tags.join("','")}')` : '1=1')
       .andWhere('a.isDeleted <> 1')
       .orderBy({ 'a.updatedAt': 'DESC' })
       .skip(dto.offset)
       .take(dto.num)
       .getManyAndCount();
-    console.log(res);
+    const list: ArticleListItem[] = await Promise.all<ArticleListItem[]>(res[0].map(async item => {
+      return {
+        id: item.id,
+        userId: item.userId,
+        title: item.title,
+        description: item.description,
+        field: await (await this.fieldRepository.findOne(item.fieldId)).field,
+        tags: (await (await this.tagRepository.find({ articleId: item.id })).map(tag_entity => tag_entity.tag)),
+        time:item.updatedAt
+      } as ArticleListItem
+    }))
     return {
       list: res[0],
       total: res[1]

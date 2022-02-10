@@ -90,3 +90,19 @@ export class ArticleList{
   @ApiProperty({type:Number,required:true,description:'文章总数'})
   total:number;
 }
+
+// 文章修改dto
+export class ArticleEditDto{
+  @ApiProperty({type:Number,required:true,description:'文章ID'})
+  id: number;
+  @ApiProperty({ type: String, required: false, description: '文章标题' })
+  title?:string;
+  @ApiProperty({type:String,required:false,description:'文章描述'})
+  description?:string;
+  @ApiProperty({type:String,required:false,description:'文章内容(markdown文本)'})
+  content?:string;
+  @ApiProperty({type:Number,required:false,description:'文章分区Id'})
+  fieldId?:number;
+  @ApiProperty({type:[String],required:false,description:'文章标签'})
+  tags?:string[];
+}

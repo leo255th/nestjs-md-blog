@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post, Query, Req } from '@nestjs/common';
 import { ApiBearerAuth, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { ArticleCreateDto, ArticleList, ArticleListSearchDto, FieldCreateDto, FieldEditDto, FieldNameItem } from './article.dto';
+import { ArticleCreateDto, ArticleEditDto, ArticleList, ArticleListSearchDto, FieldCreateDto, FieldEditDto, FieldNameItem } from './article.dto';
 import { ArticleService } from './article.service';
 import { Request } from 'express';
 
@@ -52,7 +52,14 @@ export class ArticleController {
   async getArticleList(
     @Req() req: Request
   ):Promise<ArticleList>{
-    console.log(req.query)
     return this.articleService.getArticleList(req.query as any);
+  }
+  @Post('edit-article')
+  @ApiResponse({ status: 201, description: '文章修改成功,返回文章的ID', type: Number })
+  @ApiTags('文章-修改')
+  async articleEdit(
+    @Body() dto: ArticleEditDto,
+  ): Promise<number> {
+    return this.articleService.articleEdit(dto);
   }
 }

@@ -5,7 +5,7 @@ import { FieldEntity } from 'src/models/field.entity';
 import { TagEntity } from 'src/models/tag.entity';
 import { UserEntity } from 'src/models/user.entity';
 import { Repository } from 'typeorm';
-import { ArticleCreateDto, ArticleList, ArticleListItem, ArticleListSearchDto, FieldCreateDto, FieldEditDto, FieldNameItem } from './article.dto';
+import { ArticleCreateDto, ArticleEditDto, ArticleList, ArticleListItem, ArticleListSearchDto, FieldCreateDto, FieldEditDto, FieldNameItem } from './article.dto';
 
 @Injectable()
 export class ArticleService {
@@ -65,6 +65,18 @@ export class ArticleService {
       ...dto
     }
     const res = await this.fieldRepository.save(field);
+    return res.id;
+  }
+  // 修改文章
+  async articleEdit(
+    dto:ArticleEditDto
+  ):Promise<number>{
+    let article=await this.articleRepository.findOne(dto.id);
+    article={
+      ...article,
+      ...dto
+    }
+    const res=await this.articleRepository.save(article);
     return res.id;
   }
   // 获取分区名称列表

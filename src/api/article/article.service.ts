@@ -4,6 +4,7 @@ import { ArticleEntity } from 'src/models/article.entity';
 import { FieldEntity } from 'src/models/field.entity';
 import { TagEntity } from 'src/models/tag.entity';
 import { UserEntity } from 'src/models/user.entity';
+import { arrCompare } from 'src/utils/arrCompare.fuc';
 import { Repository } from 'typeorm';
 import { ArticleCreateDto, ArticleEditDto, ArticleList, ArticleListItem, ArticleListSearchDto, FieldCreateDto, FieldEditDto, FieldNameItem } from './article.dto';
 
@@ -71,20 +72,22 @@ export class ArticleService {
   async articleEdit(
     dto: ArticleEditDto
   ): Promise<number> {
+    // 如果要修改标签
     if (dto.tags) {
-      // 如果要修改标签
-      // 先删除原有标签
-      const tags = await this.tagRepository.find({ articleId: dto.id ,isDeleted:false});
-      for (const tag_entity of tags) {
-        tag_entity.isDeleted = true;
-        await this.tagRepository.save(tag_entity);
-      }
-      // 保存新标签
-      for (let item of dto.tags) {
-        let tag = new TagEntity();
-        tag.articleId = dto.id;
-        tag.tag = item;
-        await this.tagRepository.save(tag);
+      const tags = await this.tagRepository.find({ articleId: dto.id, isDeleted: false });
+      // 如果传来的tags和文章本来的tags不相同,则删除原来的tags,保存新的tags
+      if (!arrCompare(tags.map(tag_entity => tag_entity.tag), dto.tags)) {
+        for (const tag_entity of tags) {
+          tag_entity.isDeleted = true;
+          await this.tagRepository.save(tag_entity);
+        }
+        // 保存新标签
+        for (let item of dto.tags) {
+          let tag = new TagEntity();
+          tag.articleId = dto.id;
+          tag.tag = item;
+          await this.tagRepository.save(tag);
+        }
       }
       delete dto.tags;
     }

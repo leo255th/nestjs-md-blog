@@ -5,7 +5,7 @@ import { FieldEntity } from 'src/models/field.entity';
 import { TagEntity } from 'src/models/tag.entity';
 import { UserEntity } from 'src/models/user.entity';
 import { Repository } from 'typeorm';
-import { ArticleCreateDto, FieldCreateDto, FieldEditDto, FieldNameItem } from './article.dto';
+import { ArticleCreateDto, ArticleList, FieldCreateDto, FieldEditDto, FieldNameItem } from './article.dto';
 
 @Injectable()
 export class ArticleService {
@@ -83,6 +83,11 @@ export class ArticleService {
     }));
     field_name_list.sort((a,b)=>a.order-b.order);
     return field_name_list;
+  }
+
+  // 获取文章列表
+  async getArticleList():Promise<ArticleList>{
+    return;
   }
   
 }

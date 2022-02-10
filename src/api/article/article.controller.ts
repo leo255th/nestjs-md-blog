@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
-import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { ArticleCreateDto, FieldCreateDto, FieldEditDto, FieldNameItem } from './article.dto';
+import { ApiBearerAuth, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ArticleCreateDto, ArticleList, ArticleListSearchDto, FieldCreateDto, FieldEditDto, FieldNameItem } from './article.dto';
 import { ArticleService } from './article.service';
 
 @Controller('article')
@@ -39,5 +39,17 @@ export class ArticleController {
   async getFieldNameList(
   ):Promise<FieldNameItem[]>{
     return this.articleService.getFieldNameList()
+  }
+  @Get('get-article-list')
+  @ApiResponse({status:200,description:'文章列表',type:ArticleList})
+  @ApiTags('文章-获取-列表')
+  @ApiQuery({
+    name:'searchDto',
+    type:ArticleListSearchDto,
+    description:'文章列表搜索选项'
+  })
+  async getArticleList(
+  ):Promise<ArticleList>{
+    return;
   }
 }

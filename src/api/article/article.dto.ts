@@ -52,3 +52,41 @@ export class FieldNameItem{
   @ApiProperty({type:Number,required:true,description:'文章数'})
   count: number;
 }
+// 文章列表查询dto
+export class ArticleListSearchDto{
+  @ApiProperty({type:Number,required:true,description:'作者ID'})
+  userId: number;
+  @ApiProperty({type:String,required:false,description:'文章分区'})
+  field?: string;
+  @ApiProperty({type:[String],required:false,description:'文章标签'})
+  tags?:string[];
+  @ApiProperty({type:Number,default:0,description:'偏移量'})
+  offset:number;
+  @ApiProperty({type:Number,default:10,description:'获取量'})
+  num:number;
+}
+
+// 获取文章列表
+export class ArticleListItem{
+  @ApiProperty({type:Number,required:true,description:'文章ID'})
+  id: number;
+  @ApiProperty({type:Number,required:true,description:'作者ID'})
+  userId: number;
+  @ApiProperty({type:String,required:true,description:'文章标题'})
+  title: string;
+  @ApiProperty({type:String,required:true,description:'文章描述'})
+  description: string;
+  @ApiProperty({type:String,required:true,description:'文章分区'})
+  field: string;
+  @ApiProperty({type:[String],required:true,description:'文章标签'})
+  tags:string[];
+  @ApiProperty({type:Date,required:true,description:'文章的更新时间'})
+  time?: Date;
+}
+
+export class ArticleList{
+  @ApiProperty({type:[ArticleListItem],required:true,description:'文章列表'})
+  list:ArticleListItem[];
+  @ApiProperty({type:Number,required:true,description:'文章总数'})
+  count:number;
+}

@@ -69,14 +69,31 @@ export class ArticleService {
   }
   // 修改文章
   async articleEdit(
-    dto:ArticleEditDto
-  ):Promise<number>{
-    let article=await this.articleRepository.findOne(dto.id);
-    article={
+    dto: ArticleEditDto
+  ): Promise<number> {
+    if (dto.tags) {
+      // 如果要修改标签
+      // 先删除原有标签
+      const tags = await this.tagRepository.find({ articleId: dto.id ,isDeleted:false});
+      for (const tag_entity of tags) {
+        tag_entity.isDeleted = true;
+        await this.tagRepository.save(tag_entity);
+      }
+      // 保存新标签
+      for (let item of dto.tags) {
+        let tag = new TagEntity();
+        tag.articleId = dto.id;
+        tag.tag = item;
+        await this.tagRepository.save(tag);
+      }
+      delete dto.tags;
+    }
+    let article = await this.articleRepository.findOne(dto.id);
+    article = {
       ...article,
       ...dto
     }
-    const res=await this.articleRepository.save(article);
+    const res = await this.articleRepository.save(article);
     return res.id;
   }
   // 获取分区名称列表
@@ -110,7 +127,7 @@ export class ArticleService {
       } else {
         tags = [...dto.tags];
       }
-      qb = qb.leftJoinAndSelect(TagEntity, 't', 't.articleId=a.id')
+      qb = qb.leftJoinAndSelect(TagEntity, 't', 't.articleId=a.id and t.isDeleted <> 1')
     }
     res = await qb
       .where(dto.fieldId ? 'a.fieldId=:fieldId' : '1=1', { fieldId: dto.fieldId })
@@ -128,8 +145,8 @@ export class ArticleService {
         title: item.title,
         description: item.description,
         field: await (await this.fieldRepository.findOne(item.fieldId)).field,
-        tags: (await (await this.tagRepository.find({ articleId: item.id })).map(tag_entity => tag_entity.tag)),
-        time:item.updatedAt
+        tags: (await (await this.tagRepository.find({ articleId: item.id, isDeleted: false })).map(tag_entity => tag_entity.tag)),
+        time: item.updatedAt
       } as ArticleListItem
     }))
     return {

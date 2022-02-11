@@ -175,6 +175,7 @@ export class ArticleService {
           const tags_entity=await this.tagRepository.find({ articleId: item.id, isDeleted: false });
           console.log('找到的tags_enetity:',tags_entity);
           const tags=tags_entity.map(tag=>tag.tag);
+          console.log(tags);
           return tags;
         })(),
         time: item.updatedAt

@@ -6,7 +6,7 @@ import { TagEntity } from 'src/models/tag.entity';
 import { UserEntity } from 'src/models/user.entity';
 import { arrCompare } from 'src/utils/arrCompare.fuc';
 import { Repository } from 'typeorm';
-import { ArticleCreateDto, ArticleEditDto, ArticleList, ArticleListItem, ArticleListSearchDto, FieldCreateDto, FieldEditDto, FieldNameItem } from './article.dto';
+import { ArticleCreateDto, ArticleDetail, ArticleEditDto, ArticleList, ArticleListItem, ArticleListSearchDto, FieldCreateDto, FieldEditDto, FieldNameItem } from './article.dto';
 
 @Injectable()
 export class ArticleService {
@@ -172,7 +172,7 @@ export class ArticleService {
         field: await (await this.fieldRepository.findOne(item.fieldId)).field,
         tags: (await (await this.tagRepository.find({ articleId: item.id, isDeleted: false })).map(tag_entity => tag_entity.tag)),
         time: item.updatedAt,
-        isVisiable:item.isVisiable
+        isVisiable: item.isVisiable
       } as ArticleListItem
     }))
     return {
@@ -214,7 +214,7 @@ export class ArticleService {
         field: await (await this.fieldRepository.findOne(item.fieldId)).field,
         tags: (await this.tagRepository.find({ articleId: item.id, isDeleted: false })).map(tag_entity => tag_entity.tag),
         time: item.updatedAt,
-        isVisiable:item.isVisiable
+        isVisiable: item.isVisiable
       } as ArticleListItem
     }))
     return {
@@ -223,4 +223,49 @@ export class ArticleService {
     }
   }
 
+  // 通过ID获取文章详情
+  // 获取仅可见文章
+  async getArticleDetailVisiable(
+    id: number
+  ): Promise<ArticleDetail> {
+    const article = await this.articleRepository.findOne(id);
+    if (!article) {
+      throw new HttpException('文章不存在', 400003)
+    }
+    if (article.isVisiable == false) {
+      throw new HttpException('文章不存在', 400001)
+    }
+    if (article.isDeleted == true) {
+      throw new HttpException('文章不存在', 400002)
+    }
+    return {
+      id: article.id,
+      userId: article.userId,
+      title: article.title,
+      description: article.description,
+      content: article.content,
+      field: await (await this.fieldRepository.findOne(article.fieldId)).field,
+      tags: (await this.tagRepository.find({ articleId: article.id, isDeleted: false })).map(tag_entity => tag_entity.tag),
+      time: article.updatedAt,
+    }
+  }
+  // 通过ID获取文章详情
+  async getArticleDetailAny(
+    id: number
+  ): Promise<ArticleDetail> {
+    const article = await this.articleRepository.findOne(id);
+    if (!article) {
+      throw new HttpException('文章不存在', 400003)
+    }
+    return {
+      id: article.id,
+      userId: article.userId,
+      title: article.title,
+      description: article.description,
+      content: article.content,
+      field: await (await this.fieldRepository.findOne(article.fieldId)).field,
+      tags: (await this.tagRepository.find({ articleId: article.id, isDeleted: false })).map(tag_entity => tag_entity.tag),
+      time: article.updatedAt,
+    }
+  }
 }

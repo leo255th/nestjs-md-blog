@@ -108,3 +108,23 @@ export class ArticleEditDto{
   @ApiProperty({type:Boolean,required:false,description:'是否在首页可见'})
   isVisiable?: boolean;
 }
+
+// 文章详情
+export class ArticleDetail{
+  @ApiProperty({type:Number,required:true,description:'文章ID'})
+  id: number;
+  @ApiProperty({type:Number,required:true,description:'作者ID'})
+  userId: number;
+  @ApiProperty({type:String,required:true,description:'文章标题'})
+  title: string;
+  @ApiProperty({type:String,required:true,description:'文章摘要'})
+  description: string;
+  @ApiProperty({type:String,required:true,description:'文章内容'})
+  content: string;
+  @ApiProperty({type:String,required:true,description:'文章分区'})
+  field: string;
+  @ApiProperty({type:[String],required:true,description:'文章标签'})
+  tags:string[];
+  @ApiProperty({type:Date,required:true,description:'文章的更新时间'})
+  time?: Date;
+}

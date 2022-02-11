@@ -22,6 +22,7 @@ export class UserController {
   //   return this.userService.signUp(dto)
   // }
 
+  @Accesses('NONE')
   @Post('sign-in')
   @ApiResponse({ status: 201, description: '登陆成功', type: UserSignInResDto })
   @ApiResponse({ status: 400, description: '登陆失败' })
@@ -65,7 +66,7 @@ export class UserController {
   @Get('get-user-info')
   @ApiResponse({status:200,description:'获取成功',type:GetUserInfoDto})
   @ApiTags('获取用户基本信息')
-  @Accesses('USER')
+  @Accesses('ADMIN')
   async getUserInfo(
     @Headers('Authorization') access_token:string,
   ):Promise<GetUserInfoDto>{

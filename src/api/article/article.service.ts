@@ -170,14 +170,7 @@ export class ArticleService {
         title: item.title,
         description: item.description,
         field: await (await this.fieldRepository.findOne(item.fieldId)).field,
-        // tags: (await (await this.tagRepository.find({ articleId: item.id, isDeleted: false })).map(tag_entity => tag_entity.tag)),
-        tags:await (async ()=>{
-          const tags_entity=await this.tagRepository.find({ articleId: item.id, isDeleted: false });
-          console.log('找到的tags_enetity:',tags_entity);
-          const tags=tags_entity.map(tag=>tag.tag);
-          console.log(tags);
-          return tags;
-        })(),
+        tags: (await (await this.tagRepository.find({ articleId: item.id, isDeleted: false })).map(tag_entity => tag_entity.tag)),
         time: item.updatedAt
       } as ArticleListItem
     }))
@@ -223,7 +216,7 @@ export class ArticleService {
       } as ArticleListItem
     }))
     return {
-      list: res[0],
+      list,
       total: res[1]
     }
   }

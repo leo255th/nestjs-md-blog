@@ -182,7 +182,7 @@ export class ArticleService {
       } as ArticleListItem
     }))
     return {
-      list: res[0],
+      list,
       total: res[1]
     }
   }

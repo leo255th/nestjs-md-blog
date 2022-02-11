@@ -171,7 +171,8 @@ export class ArticleService {
         description: item.description,
         field: await (await this.fieldRepository.findOne(item.fieldId)).field,
         tags: (await (await this.tagRepository.find({ articleId: item.id, isDeleted: false })).map(tag_entity => tag_entity.tag)),
-        time: item.updatedAt
+        time: item.updatedAt,
+        isVisiable:item.isVisiable
       } as ArticleListItem
     }))
     return {
@@ -212,7 +213,8 @@ export class ArticleService {
         description: item.description,
         field: await (await this.fieldRepository.findOne(item.fieldId)).field,
         tags: (await this.tagRepository.find({ articleId: item.id, isDeleted: false })).map(tag_entity => tag_entity.tag),
-        time: item.updatedAt
+        time: item.updatedAt,
+        isVisiable:item.isVisiable
       } as ArticleListItem
     }))
     return {

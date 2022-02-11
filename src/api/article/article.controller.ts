@@ -36,20 +36,40 @@ export class ArticleController {
   }
   @Get('get-field-list')
   @ApiResponse({status:200,description:'分区名称列表',type:[FieldNameItem]})
-  @ApiTags('分区-获取-名称列表')
+  @ApiTags('分区-获取-列表-可见')
   async getFieldNameList(
   ):Promise<FieldNameItem[]>{
     return this.articleService.getFieldNameList()
   }
+  @Get('get-all-field-list')
+  @ApiResponse({status:200,description:'分区名称列表',type:[FieldNameItem]})
+  @ApiTags('分区-获取-列表-全部')
+  async getAllFieldNameList(
+  ):Promise<FieldNameItem[]>{
+    return this.articleService.getAllFieldNameList()
+  }
   @Get('get-article-list')
   @ApiResponse({status:200,description:'文章列表',type:ArticleList})
-  @ApiTags('文章-获取-列表')
+  @ApiTags('文章-获取-列表-可见')
   @ApiQuery({
     name:'searchDto',
     type:ArticleListSearchDto,
     description:'文章列表搜索选项'
   })
   async getArticleList(
+    @Req() req: Request
+  ):Promise<ArticleList>{
+    return this.articleService.getArticleList(req.query as any);
+  }
+  @Get('get-all-article-list')
+  @ApiResponse({status:200,description:'文章列表',type:ArticleList})
+  @ApiTags('文章-获取-列表-全部')
+  @ApiQuery({
+    name:'searchDto',
+    type:ArticleListSearchDto,
+    description:'文章列表搜索选项'
+  })
+  async getAllArticleList(
     @Req() req: Request
   ):Promise<ArticleList>{
     return this.articleService.getArticleList(req.query as any);

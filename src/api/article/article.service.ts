@@ -100,8 +100,28 @@ export class ArticleService {
     const res = await this.articleRepository.save(article);
     return res.id;
   }
-  // 获取分区名称列表
-  async getFieldNameList(): Promise<FieldNameItem[]> {
+  // 获取可见分区列表
+  async getFieldNameList(
+    isVisiable = true
+  ): Promise<FieldNameItem[]> {
+    const res = await this.fieldRepository.find({ isDeleted: false, isVisiable });
+    const field_name_list = await Promise.all(res.map(async field_entity => {
+      return {
+        id: field_entity.id,
+        field: field_entity.field,
+        order: field_entity.order,
+        isVisiable: field_entity.isVisiable,
+        count: await this.articleRepository.count({
+          fieldId: field_entity.id
+        })
+      }
+    }));
+    field_name_list.sort((a, b) => a.order - b.order);
+    return field_name_list;
+  }
+  // 获取全部分区
+  async getAllFieldNameList(
+  ): Promise<FieldNameItem[]> {
     const res = await this.fieldRepository.find({ isDeleted: false });
     const field_name_list = await Promise.all(res.map(async field_entity => {
       return {
@@ -120,6 +140,48 @@ export class ArticleService {
 
   // 获取文章列表
   async getArticleList(
+    dto: ArticleListSearchDto
+  ): Promise<ArticleList> {
+    let tags = [];
+    let qb = this.articleRepository.createQueryBuilder('a');
+    let res;
+    if (dto.tags) {
+      if (typeof dto.tags == 'string') {
+        tags = [dto.tags];
+      } else {
+        tags = [...dto.tags];
+      }
+      qb = qb.leftJoinAndSelect(TagEntity, 't', 't.articleId=a.id and t.isDeleted <> 1')
+    }
+    res = await qb
+      .where(dto.fieldId ? 'a.fieldId=:fieldId' : '1=1', { fieldId: dto.fieldId })
+      .andWhere('a.userId=:userId', { userId: dto.userId })
+      .andWhere(dto.tags ? `t.tag in ('${tags.join("','")}')` : '1=1')
+      .andWhere('a.isDeleted <> 1')
+      .andWhere('a.isVisiable=:isVisiable', { isVisiable: 1 })
+      .orderBy({ 'a.updatedAt': 'DESC' })
+      .skip(dto.offset)
+      .take(dto.num)
+      .getManyAndCount();
+    const list: ArticleListItem[] = await Promise.all<ArticleListItem[]>(res[0].map(async item => {
+      return {
+        id: item.id,
+        userId: item.userId,
+        title: item.title,
+        description: item.description,
+        field: await (await this.fieldRepository.findOne(item.fieldId)).field,
+        tags: (await (await this.tagRepository.find({ articleId: item.id, isDeleted: false })).map(tag_entity => tag_entity.tag)),
+        time: item.updatedAt
+      } as ArticleListItem
+    }))
+    return {
+      list: res[0],
+      total: res[1]
+    }
+  }
+
+  // 获取全部文章列表
+  async getAllArticleList(
     dto: ArticleListSearchDto
   ): Promise<ArticleList> {
     let tags = [];

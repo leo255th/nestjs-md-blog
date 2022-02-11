@@ -28,6 +28,9 @@ export class ArticleEntity {
   @UpdateDateColumn({ comment: '最后修改时间' })
   updatedAt?: Date;
 
+  @Column({ comment: '是否可见', default: 0 })
+  isVisiable?: boolean;
+
   @Column({ comment: '是否删除', default: 0 })
   isDeleted?: boolean;
 

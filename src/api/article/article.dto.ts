@@ -105,4 +105,6 @@ export class ArticleEditDto{
   fieldId?:number;
   @ApiProperty({type:[String],required:false,description:'文章标签'})
   tags?:string[];
+  @ApiProperty({type:Boolean,required:false,description:'是否在首页可见'})
+  isVisiable?: boolean;
 }

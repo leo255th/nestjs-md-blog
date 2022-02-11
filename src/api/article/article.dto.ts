@@ -7,7 +7,7 @@ export class ArticleCreateDto {
   userId: number;
   @ApiProperty({ type: String, required: true, description: '文章标题' })
   title:string;
-  @ApiProperty({type:String,required:true,description:'文章描述'})
+  @ApiProperty({type:String,required:true,description:'文章摘要'})
   description:string;
   @ApiProperty({type:String,required:true,description:'文章内容(markdown文本)'})
   content:string;
@@ -74,7 +74,7 @@ export class ArticleListItem{
   userId: number;
   @ApiProperty({type:String,required:true,description:'文章标题'})
   title: string;
-  @ApiProperty({type:String,required:true,description:'文章描述'})
+  @ApiProperty({type:String,required:true,description:'文章摘要'})
   description: string;
   @ApiProperty({type:String,required:true,description:'文章分区'})
   field: string;
@@ -97,7 +97,7 @@ export class ArticleEditDto{
   id: number;
   @ApiProperty({ type: String, required: false, description: '文章标题' })
   title?:string;
-  @ApiProperty({type:String,required:false,description:'文章描述'})
+  @ApiProperty({type:String,required:false,description:'文章摘要'})
   description?:string;
   @ApiProperty({type:String,required:false,description:'文章内容(markdown文本)'})
   content?:string;

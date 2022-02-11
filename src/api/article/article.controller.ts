@@ -72,7 +72,7 @@ export class ArticleController {
   async getAllArticleList(
     @Req() req: Request
   ):Promise<ArticleList>{
-    return this.articleService.getArticleList(req.query as any);
+    return this.articleService.getAllArticleList(req.query as any);
   }
   @Post('edit-article')
   @ApiResponse({ status: 201, description: '文章修改成功,返回文章的ID', type: Number })

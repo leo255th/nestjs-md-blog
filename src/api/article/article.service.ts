@@ -230,13 +230,13 @@ export class ArticleService {
   ): Promise<ArticleDetail> {
     const article = await this.articleRepository.findOne(id);
     if (!article) {
-      throw new HttpException('文章不存在', 400003)
+      throw new HttpException('无效文章ID', 404)
     }
     if (article.isVisiable == false) {
-      throw new HttpException('文章不存在', 400001)
+      throw new HttpException('文章不存在', 403)
     }
     if (article.isDeleted == true) {
-      throw new HttpException('文章不存在', 400002)
+      throw new HttpException('文章不存在', 404)
     }
     return {
       id: article.id,
@@ -255,7 +255,10 @@ export class ArticleService {
   ): Promise<ArticleDetail> {
     const article = await this.articleRepository.findOne(id);
     if (!article) {
-      throw new HttpException('文章不存在', 400003)
+      throw new HttpException('文章ID无效', 404)
+    }
+    if (article.isDeleted == true) {
+      throw new HttpException('文章已删除', 404)
     }
     return {
       id: article.id,

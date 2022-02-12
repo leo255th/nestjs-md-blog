@@ -57,7 +57,6 @@ export class ArticleController {
   
   @Get('get-visiable-article')
   @ApiResponse({status:200,description:'文章详情',type:ArticleDetail})
-  @ApiResponse({status:403,description:'文章无法访问'})
   @ApiResponse({status:404,description:'文章不存在'})
   @ApiQuery({
     name:'articleId',

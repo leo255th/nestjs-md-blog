@@ -31,7 +31,7 @@ export class UserGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const accessToken = request.headers.authorization;
     if (!accessToken) {
-      throw new HttpException('授权无效，请重新登录', HttpStatus.UNAUTHORIZED)
+      throw new HttpException('未授权的访问', HttpStatus.UNAUTHORIZED)
     }
     // 如果redis里没有对应的accessToken,则抛出认证错误
     const tokenInRedis=await redis.hget(redis_access_key,accessToken);

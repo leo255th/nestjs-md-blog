@@ -5,7 +5,7 @@ import { join } from 'path';
 import * as Redis from "ioredis";
 import { APP_CONFIG } from 'src/app.config';
 import e from 'express';
-import { HttpException, HttpStatus } from '@nestjs/common';
+import { HttpCode, HttpException, HttpStatus } from '@nestjs/common';
 const PRIVATE_KEY = fs.readFileSync(path.resolve(join(__dirname, '../../resources/ecc-private-key.pem')));
 const PUBLIC_KEY = fs.readFileSync(path.resolve(join(__dirname, '../../resources/ecc-public-key.pem')));
 const redis = new Redis(APP_CONFIG.REDIS);
@@ -248,7 +248,7 @@ export async function accessTokenVerify(token: {
           res: true,
         })
       } else if (err.name = 'TokenExpiredError') {
-        throw new HttpException('token无效，请刷新token', 4000)
+        throw new HttpException('token无效，请刷新token', HttpStatus.UNAUTHORIZED)
       } else {
         resolve({
           res: false

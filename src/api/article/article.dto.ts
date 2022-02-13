@@ -123,6 +123,8 @@ export class ArticleDetail{
   content: string;
   @ApiProperty({type:String,required:true,description:'文章分区'})
   field: string;
+  @ApiProperty({type:Number,required:true,description:'文章分区ID'})
+  fieldId: number;
   @ApiProperty({type:[String],required:true,description:'文章标签'})
   tags:string[];
   @ApiProperty({type:Date,required:true,description:'文章的更新时间'})

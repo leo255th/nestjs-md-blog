@@ -113,7 +113,9 @@ export class ArticleService {
         order: field_entity.order,
         isVisiable: field_entity.isVisiable,
         count: await this.articleRepository.count({
-          fieldId: field_entity.id
+          fieldId: field_entity.id,
+          isDeleted:false,
+          isVisiable:true
         })
       }
     }));
@@ -131,7 +133,8 @@ export class ArticleService {
         order: field_entity.order,
         isVisiable: field_entity.isVisiable,
         count: await this.articleRepository.count({
-          fieldId: field_entity.id
+          fieldId: field_entity.id,
+          isDeleted:false
         })
       }
     }));

@@ -15,7 +15,8 @@ export class ArticleCreateDto {
   fieldId:number;
   @ApiProperty({type:[String],required:true,description:'文章标签'})
   tags:string[];
-  
+  @ApiProperty({type:Boolean,default:false,description:'是否在首页可见'})
+  isVisiable?: boolean;
 }
 
 // 新增分区dto

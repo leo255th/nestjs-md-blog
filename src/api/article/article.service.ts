@@ -32,6 +32,7 @@ export class ArticleService {
     article.content = dto.content;
     article.fieldId = dto.fieldId;
     article.userId = dto.userId;
+    article.isVisiable=dto.isVisiable;
     article = await this.articleRepository.save(article);
     if (!article) {
       throw new HttpException('文章创建失败', HttpStatus.INTERNAL_SERVER_ERROR)

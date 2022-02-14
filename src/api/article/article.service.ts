@@ -138,6 +138,17 @@ export class ArticleService {
     field_name_list.sort((a, b) => a.order - b.order);
     return field_name_list;
   }
+  // 获取标签列表
+  async getTagList():Promise<string[]>{
+    const tagList:string[]=(await this.tagRepository.query(`
+    SELECT DISTINCT  t.tag  as tag 
+    from tag t 
+    `
+    )).map(
+      row=>row.tag
+    )
+    return tagList;
+  }
 
   // 获取文章列表
   async getArticleList(

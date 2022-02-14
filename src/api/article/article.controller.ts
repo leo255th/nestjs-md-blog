@@ -54,6 +54,14 @@ export class ArticleController {
   ):Promise<FieldNameItem[]>{
     return this.articleService.getAllFieldNameList()
   }
+
+  @Get('get-tag-list')
+  @ApiResponse({status:200,description:'标签名称列表',type:[String]})
+  @ApiTags('标签-获取-列表')
+  async getTagList(
+  ):Promise<string[]>{
+    return this.articleService.getTagList()
+  }
   
   @Get('get-visiable-article')
   @ApiResponse({status:200,description:'文章详情',type:ArticleDetail})

@@ -108,6 +108,8 @@ export class ArticleEditDto{
   tags?:string[];
   @ApiProperty({type:Boolean,required:false,description:'是否在首页可见'})
   isVisiable?: boolean;
+  @ApiProperty({type:Boolean,required:false,description:'是否删除'})
+  isDeleted?: boolean;
 }
 
 // 文章详情

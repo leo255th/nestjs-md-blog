@@ -1,16 +1,17 @@
-import { Body, Controller, Get, Post, Query, Req } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Req, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { ApiBearerAuth, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ArticleCreateDto, ArticleDetail, ArticleEditDto, ArticleList, ArticleListSearchDto, FieldCreateDto, FieldEditDto, FieldNameItem } from './article.dto';
 import { ArticleService } from './article.service';
 import { Request } from 'express';
 import { Accesses } from 'src/decorators/accesses.decorator';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('article')
 @ApiBearerAuth()
 export class ArticleController {
   constructor(
-    private readonly articleService:ArticleService
-  ){}
+    private readonly articleService: ArticleService
+  ) { }
 
   @Accesses('ADMIN')
   @Post('create-article')
@@ -40,84 +41,84 @@ export class ArticleController {
     return this.articleService.fieldEdit(dto);
   }
   @Get('get-field-list')
-  @ApiResponse({status:200,description:'分区名称列表',type:[FieldNameItem]})
+  @ApiResponse({ status: 200, description: '分区名称列表', type: [FieldNameItem] })
   @ApiTags('分区-获取-列表-仅可见')
   async getFieldNameList(
-  ):Promise<FieldNameItem[]>{
+  ): Promise<FieldNameItem[]> {
     return this.articleService.getFieldNameList()
   }
   @Accesses('ADMIN')
   @Get('get-all-field-list')
-  @ApiResponse({status:200,description:'分区名称列表',type:[FieldNameItem]})
+  @ApiResponse({ status: 200, description: '分区名称列表', type: [FieldNameItem] })
   @ApiTags('分区-获取-列表-全部')
   async getAllFieldNameList(
-  ):Promise<FieldNameItem[]>{
+  ): Promise<FieldNameItem[]> {
     return this.articleService.getAllFieldNameList()
   }
 
   @Get('get-tag-list')
-  @ApiResponse({status:200,description:'标签名称列表',type:[String]})
+  @ApiResponse({ status: 200, description: '标签名称列表', type: [String] })
   @ApiTags('标签-获取-列表')
   async getTagList(
-  ):Promise<string[]>{
+  ): Promise<string[]> {
     return this.articleService.getTagList()
   }
-  
+
   @Get('get-visiable-article')
-  @ApiResponse({status:200,description:'文章详情',type:ArticleDetail})
-  @ApiResponse({status:404,description:'文章不存在'})
+  @ApiResponse({ status: 200, description: '文章详情', type: ArticleDetail })
+  @ApiResponse({ status: 404, description: '文章不存在' })
   @ApiQuery({
-    name:'articleId',
-    type:Number,
-    description:'文章ID'
+    name: 'articleId',
+    type: Number,
+    description: '文章ID'
   })
   @ApiTags('文章-获取-详情-仅可见')
   async getArticleDetailVisiable(
-    @Query('articleId')articleId:number
-  ):Promise<ArticleDetail>{
+    @Query('articleId') articleId: number
+  ): Promise<ArticleDetail> {
     return this.articleService.getArticleDetailVisiable(articleId);
   }
   @Accesses('ADMIN')
   @Get('get-any-article')
-  @ApiResponse({status:200,description:'文章详情',type:ArticleDetail})
-  @ApiResponse({status:404,description:'文章不存在'})
+  @ApiResponse({ status: 200, description: '文章详情', type: ArticleDetail })
+  @ApiResponse({ status: 404, description: '文章不存在' })
   @ApiQuery({
-    name:'articleId',
-    type:Number,
-    description:'文章ID'
+    name: 'articleId',
+    type: Number,
+    description: '文章ID'
   })
   @ApiTags('文章-获取-详情-全部可见度')
   async getArticleDetailAny(
-    @Query('articleId')articleId:number
-  ):Promise<ArticleDetail>{
+    @Query('articleId') articleId: number
+  ): Promise<ArticleDetail> {
     return this.articleService.getArticleDetailAny(articleId);
   }
 
   @Get('get-article-list')
-  @ApiResponse({status:200,description:'文章列表',type:ArticleList})
+  @ApiResponse({ status: 200, description: '文章列表', type: ArticleList })
   @ApiTags('文章-获取-列表-仅可见')
   @ApiQuery({
-    name:'searchDto',
-    type:ArticleListSearchDto,
-    description:'文章列表搜索选项'
+    name: 'searchDto',
+    type: ArticleListSearchDto,
+    description: '文章列表搜索选项'
   })
   async getArticleList(
     @Req() req: Request
-  ):Promise<ArticleList>{
+  ): Promise<ArticleList> {
     return this.articleService.getArticleList(req.query as any);
   }
   @Accesses('ADMIN')
   @Get('get-all-article-list')
-  @ApiResponse({status:200,description:'文章列表',type:ArticleList})
+  @ApiResponse({ status: 200, description: '文章列表', type: ArticleList })
   @ApiTags('文章-获取-列表-全部')
   @ApiQuery({
-    name:'searchDto',
-    type:ArticleListSearchDto,
-    description:'文章列表搜索选项'
+    name: 'searchDto',
+    type: ArticleListSearchDto,
+    description: '文章列表搜索选项'
   })
   async getAllArticleList(
     @Req() req: Request
-  ):Promise<ArticleList>{
+  ): Promise<ArticleList> {
     return this.articleService.getAllArticleList(req.query as any);
   }
   @Accesses('ADMIN')
@@ -128,5 +129,11 @@ export class ArticleController {
     @Body() dto: ArticleEditDto,
   ): Promise<number> {
     return this.articleService.articleEdit(dto);
+  }
+
+  @Post('upload')
+  @UseInterceptors(FileInterceptor('file'))
+  uploadFile(@UploadedFile() file) {
+    console.log(file);
   }
 }

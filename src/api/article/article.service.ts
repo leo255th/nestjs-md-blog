@@ -32,7 +32,7 @@ export class ArticleService {
     article.content = dto.content;
     article.fieldId = dto.fieldId;
     article.userId = dto.userId;
-    article.isVisiable=dto.isVisiable;
+    article.isVisiable = dto.isVisiable;
     article = await this.articleRepository.save(article);
     if (!article) {
       throw new HttpException('文章创建失败', HttpStatus.INTERNAL_SERVER_ERROR)
@@ -114,8 +114,8 @@ export class ArticleService {
         isVisiable: field_entity.isVisiable,
         count: await this.articleRepository.count({
           fieldId: field_entity.id,
-          isDeleted:false,
-          isVisiable:true
+          isDeleted: false,
+          isVisiable: true
         })
       }
     }));
@@ -134,7 +134,7 @@ export class ArticleService {
         isVisiable: field_entity.isVisiable,
         count: await this.articleRepository.count({
           fieldId: field_entity.id,
-          isDeleted:false
+          isDeleted: false
         })
       }
     }));
@@ -142,13 +142,13 @@ export class ArticleService {
     return field_name_list;
   }
   // 获取标签列表
-  async getTagList():Promise<string[]>{
-    const tagList:string[]=(await this.tagRepository.query(`
+  async getTagList(): Promise<string[]> {
+    const tagList: string[] = (await this.tagRepository.query(`
     SELECT DISTINCT  t.tag  as tag 
     from tag t 
     `
     )).map(
-      row=>row.tag
+      row => row.tag
     )
     return tagList;
   }
@@ -172,6 +172,13 @@ export class ArticleService {
       .where(dto.fieldId ? 'a.fieldId=:fieldId' : '1=1', { fieldId: dto.fieldId })
       .andWhere('a.userId=:userId', { userId: dto.userId })
       .andWhere(dto.tags ? `t.tag in ('${tags.join("','")}')` : '1=1')
+      .andWhere((dto.keyword) ? `(
+        ${'a.content like :keyword'} or
+        ${'a.title like :keyword'} or
+        ${'a.description like :keyword'}
+        )`: '1=1', {
+        keyword: '%' + dto.keyword + '%',
+      })
       .andWhere('a.isDeleted <> 1')
       .andWhere('a.isVisiable=:isVisiable', { isVisiable: 1 })
       .orderBy({ 'a.updatedAt': 'DESC' })
@@ -215,14 +222,12 @@ export class ArticleService {
       .where(dto.fieldId ? 'a.fieldId=:fieldId' : '1=1', { fieldId: dto.fieldId })
       .andWhere('a.userId=:userId', { userId: dto.userId })
       .andWhere(dto.tags ? `t.tag in ('${tags.join("','")}')` : '1=1')
-      .andWhere((dto.content||dto.title||dto.description)?`(
-      ${dto.content?'a.content like :content':'1=0'} or
-      ${dto.title?'a.title like :title':'1=0'} or
-      ${dto.description?'a.description like :description':'1=0'}
-      )`:'1=1',{
-        content:'%'+dto.content+'%',
-        title:'%'+dto.title+'%',
-        description:'%'+dto.description+'%'
+      .andWhere((dto.keyword) ? `(
+      ${'a.content like :keyword'} or
+      ${'a.title like :keyword'} or
+      ${'a.description like :keyword'}
+      )`: '1=1', {
+        keyword: '%' + dto.keyword + '%',
       })
       .andWhere('a.isDeleted <> 1')
       .orderBy({ 'a.updatedAt': 'DESC' })

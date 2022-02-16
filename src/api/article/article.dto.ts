@@ -59,12 +59,8 @@ export class ArticleListSearchDto{
   userId: number;
   @ApiProperty({type:Number,required:false,description:'文章分区ID'})
   fieldId?: number;
-  @ApiProperty({ type: String, required: false, description: '文章标题' })
-  title?:string;
-  @ApiProperty({type:String,required:false,description:'文章简介'})
-  description?:string;
-  @ApiProperty({type:String,required:false,description:'文章内容(markdown文本)'})
-  content?:string;
+  @ApiProperty({ type: String, required: false, description: '搜索关键词' })
+  keyword?:string;
   @ApiProperty({type:[String],required:false,description:'文章标签'})
   tags?:string[];
   @ApiProperty({type:Number,default:0,description:'偏移量'})

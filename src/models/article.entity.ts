@@ -10,7 +10,7 @@ export class ArticleEntity {
   @Column({ comment: '文章标题', nullable: false })
   title: string;
 
-  @Column({ comment: '文章的摘要', nullable: false,type:'text' })
+  @Column({ comment: '文章的简介', nullable: false,type:'text' })
   description: string;
 
   @Column({ comment: "文章的内容", nullable: false, type: 'longtext' })

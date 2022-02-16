@@ -7,7 +7,7 @@ export class ArticleCreateDto {
   userId: number;
   @ApiProperty({ type: String, required: true, description: '文章标题' })
   title:string;
-  @ApiProperty({type:String,required:true,description:'文章摘要'})
+  @ApiProperty({type:String,required:true,description:'文章简介'})
   description:string;
   @ApiProperty({type:String,required:true,description:'文章内容(markdown文本)'})
   content:string;
@@ -59,6 +59,12 @@ export class ArticleListSearchDto{
   userId: number;
   @ApiProperty({type:Number,required:false,description:'文章分区ID'})
   fieldId?: number;
+  @ApiProperty({ type: String, required: false, description: '文章标题' })
+  title?:string;
+  @ApiProperty({type:String,required:false,description:'文章简介'})
+  description?:string;
+  @ApiProperty({type:String,required:false,description:'文章内容(markdown文本)'})
+  content?:string;
   @ApiProperty({type:[String],required:false,description:'文章标签'})
   tags?:string[];
   @ApiProperty({type:Number,default:0,description:'偏移量'})
@@ -75,7 +81,7 @@ export class ArticleListItem{
   userId: number;
   @ApiProperty({type:String,required:true,description:'文章标题'})
   title: string;
-  @ApiProperty({type:String,required:true,description:'文章摘要'})
+  @ApiProperty({type:String,required:true,description:'文章简介'})
   description: string;
   @ApiProperty({type:String,required:true,description:'文章分区'})
   field: string;
@@ -98,7 +104,7 @@ export class ArticleEditDto{
   id: number;
   @ApiProperty({ type: String, required: false, description: '文章标题' })
   title?:string;
-  @ApiProperty({type:String,required:false,description:'文章摘要'})
+  @ApiProperty({type:String,required:false,description:'文章简介'})
   description?:string;
   @ApiProperty({type:String,required:false,description:'文章内容(markdown文本)'})
   content?:string;
@@ -120,7 +126,7 @@ export class ArticleDetail{
   userId: number;
   @ApiProperty({type:String,required:true,description:'文章标题'})
   title: string;
-  @ApiProperty({type:String,required:true,description:'文章摘要'})
+  @ApiProperty({type:String,required:true,description:'文章简介'})
   description: string;
   @ApiProperty({type:String,required:true,description:'文章内容'})
   content: string;

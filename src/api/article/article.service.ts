@@ -215,6 +215,15 @@ export class ArticleService {
       .where(dto.fieldId ? 'a.fieldId=:fieldId' : '1=1', { fieldId: dto.fieldId })
       .andWhere('a.userId=:userId', { userId: dto.userId })
       .andWhere(dto.tags ? `t.tag in ('${tags.join("','")}')` : '1=1')
+      .andWhere((dto.content||dto.title||dto.description)?`
+      ${dto.content?'a.content like :content':'1=0'} or
+      ${dto.title?'a.title like :title':'1=0'} or
+      ${dto.description?'a.description like :description':'1=0'}
+      `:'1=1',{
+        content:'%'+dto.content+'%',
+        title:'%'+dto.title+'%',
+        description:'%'+dto.description+'%'
+      })
       .andWhere('a.isDeleted <> 1')
       .orderBy({ 'a.updatedAt': 'DESC' })
       .skip(dto.offset)

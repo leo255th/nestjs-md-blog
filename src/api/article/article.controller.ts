@@ -137,13 +137,13 @@ export class ArticleController {
   uploadFile(@UploadedFile() file) {
     console.log(file);
     // 以现在的时间戳为名,并获得传过来的文件的后缀名
-    const filename=`${new Date().getTime()}.${file.mimetype.split('/')[1]}`
-    fs.writeFile(`./files/${filename}`,file.buffer,'ascii',(err)=>{
-      if(err){
+    const filename = `${new Date().getTime()}.${file.mimetype.split('/')[1]}`
+    fs.writeFile(`./files/${filename}`, file.buffer, 'ascii', (err) => {
+      if (err) {
         console.log(err);
       }
       console.log('文件已保存')
-      return filename
+      return `/files/${filename}`;
     })
   }
 }

@@ -5,7 +5,7 @@ import { ArticleService } from './article.service';
 import { Request } from 'express';
 import { Accesses } from 'src/decorators/accesses.decorator';
 import { FileInterceptor } from '@nestjs/platform-express';
-
+import * as fs from 'fs';
 @Controller('article')
 @ApiBearerAuth()
 export class ArticleController {
@@ -131,9 +131,19 @@ export class ArticleController {
     return this.articleService.articleEdit(dto);
   }
 
+  // 上传图片
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
   uploadFile(@UploadedFile() file) {
     console.log(file);
+    // 以现在的时间戳为名,并获得传过来的文件的后缀名
+    const filename=`${new Date().getTime()}.${file.mimetype.split('/')[1]}`
+    fs.writeFile(`./files/${filename}`,file.buffer,'ascii',(err)=>{
+      if(err){
+        console.log(err);
+      }
+      console.log('文件已保存')
+      return filename
+    })
   }
 }

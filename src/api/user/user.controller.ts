@@ -76,5 +76,18 @@ export class UserController {
     let token=tmp.length==1?tmp[0]:tmp[1];
     return this.userService.getUserInfo(token)
   }
-
+  @Get('get-user-message')
+  @ApiResponse({status:200,description:'获取成功',type:String})
+  @ApiTags('获取用户留言')
+  @ApiQuery({
+    name:'userId',
+    type:Number,
+    description:'用户ID'
+  })
+  @Accesses('NONE')
+  async getUserMessage(
+    @Query('userId') userId:number 
+  ):Promise<string>{
+    return this.userService.getUserMessage(userId)
+  }
 }

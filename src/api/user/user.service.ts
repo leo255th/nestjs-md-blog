@@ -124,5 +124,13 @@ export class UserService {
       throw new HttpException('会话已过期,请重新登录', HttpStatus.UNAUTHORIZED)
     }
   }
+  // 获取用户留言
+  async getUserMessage(userId:number):Promise<string>{
+    const user=await this.userRepository.findOne(userId);
+    if(user){
+      return user.message;
+    };
+    return '';
+  }
 }
 

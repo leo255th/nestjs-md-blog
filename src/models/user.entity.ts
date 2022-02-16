@@ -11,6 +11,9 @@ export class UserEntity {
   @Column({ nullable: false, comment: '密码' })
   passWord: string;
 
+  @Column({ default: '', comment: '主页留言' })
+  message?: string;
+
   @CreateDateColumn({ comment: '创建时间' })
   createdAt?: Date;
 

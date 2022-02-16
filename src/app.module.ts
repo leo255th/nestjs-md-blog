@@ -13,7 +13,7 @@ import { join } from 'path';
     ArticleModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'files'),
-      serveRoot:'./files/'
+      serveRoot: '/files/'
     }),
     TypeOrmModule.forRoot(
       APP_CONFIG.MARIADB

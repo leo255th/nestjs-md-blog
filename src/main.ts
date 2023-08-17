@@ -22,11 +22,13 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
   // 设置全局守卫UserGuard
   app.enableCors({
-    // origin:[
-    //   "https://leoyiblog.cn",
-    //   "https://www.leoyiblog.cn"
-    // ],
-    // credentials:true
+    origin:[
+      "http://leoyiblog.cn",
+      "http://www.leoyiblog.cn",
+      "http://sso.leoyiblog.cn"
+
+    ],
+    credentials:true
   })
   app.useGlobalGuards(new UserGuard(new Reflector()))
   await app.listen(3000);

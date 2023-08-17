@@ -185,7 +185,7 @@ export class ArticleService {
       .skip(dto.offset)
       .take(dto.num)
       .getManyAndCount();
-    const list: ArticleListItem[] = await Promise.all<ArticleListItem[]>(res[0].map(async item => {
+    const list: any = await Promise.all<ArticleListItem[]>(res[0].map(async item => {
       return {
         id: item.id,
         userId: item.userId,
@@ -200,7 +200,7 @@ export class ArticleService {
     return {
       list,
       total: res[1]
-    }
+    } as ArticleList
   }
 
   // 获取全部文章列表
@@ -234,7 +234,7 @@ export class ArticleService {
       .skip(dto.offset)
       .take(dto.num)
       .getManyAndCount();
-    const list: ArticleListItem[] = await Promise.all<ArticleListItem[]>(res[0].map(async item => {
+    const list: any = await Promise.all<ArticleListItem[]>(res[0].map(async item => {
       return {
         id: item.id,
         userId: item.userId,
@@ -249,7 +249,7 @@ export class ArticleService {
     return {
       list,
       total: res[1]
-    }
+    } as ArticleList
   }
 
   // 通过ID获取文章详情

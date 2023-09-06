@@ -118,10 +118,10 @@ export class UserService {
           userName:user.userName
         }
       }else{
-        throw new HttpException('会话已过期,请重新登录', HttpStatus.UNAUTHORIZED)
+        throw new HttpException('会话已过期,请重新登录1', HttpStatus.UNAUTHORIZED)
       }
     }else{
-      throw new HttpException('会话已过期,请重新登录', HttpStatus.UNAUTHORIZED)
+      throw new HttpException('会话已过期,请重新登录2', HttpStatus.UNAUTHORIZED)
     }
   }
   // 获取用户留言

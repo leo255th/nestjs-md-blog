@@ -126,7 +126,7 @@ export async function ticketTokenGenerate(payload: {
     const sessionMapStr = await redis.hget(redis_session_key, payload.userId + '');
     if (!sessionMapStr || sessionMapStr.length == 0) {
       // 会话已注销
-      throw new HttpException('会话已过期,请重新登录', HttpStatus.UNAUTHORIZED)
+      throw new HttpException('会话已过期,请重新登录3', HttpStatus.UNAUTHORIZED)
     } else {
       // 会话存在，验证redis通过
       // 生成ticketToken
@@ -209,7 +209,7 @@ export async function accessTokenGenerate(payload: {
     const sessionMap = JSON.parse(sessionMapStr);
     if (!sessionMap[session_token]) {
       // 如果不存在对应的session_token，判断会话注销
-      throw new HttpException('会话已过期,请重新登录', HttpStatus.UNAUTHORIZED)
+      throw new HttpException('会话已过期,请重新登录4', HttpStatus.UNAUTHORIZED)
     } else {
       sessionMap[session_token].push(accessToken);
       await redis.hmset(redis_session_key, userId + '', JSON.stringify(sessionMap))
